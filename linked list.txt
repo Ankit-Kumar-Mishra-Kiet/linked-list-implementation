@@ -1,0 +1,266 @@
+/*Program of a single linked list*/
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+    int info;
+    struct node *link;
+};
+struct node *create_list(struct node *start);
+void display(struct node *start);
+void count(struct node *start);
+void search(struct node *start,int data);
+struct node *addatbeg(struct node *start,int data);
+struct node *addatend(struct node *start,int data);
+struct node *addafter(struct node *start, int data, int item);
+struct node *addbefore(struct node *start,int data,int item);
+struct node *addatpos(struct node *start, int data, int pos);
+struct node *del(struct node *start, int data);
+struct node *reverse(struct node *start);
+ 
+ int main()
+ {
+     struct node *start=NULL;
+     int choice, data, item, pos;
+     while (1)
+     {
+         printf("1.Create List \n");
+         printf("2.Display\n3.Search\n4.Add to empty list/ Add at begining\n5.Add at end\n6.Add after node\n");
+         printf("7.Add before node\n8.Add at position\n9.Delete\n10.Reverse\n11.Quit\n\n");
+         printf("Enter your choice : ");
+         scanf("%d",&choice);
+         switch(choice)
+         {
+             case 1: 
+             start= create_list(start);
+             break;
+             case 2:display(start);
+             break;
+             case 3:printf("Enter the element to be searched: ");
+             scanf("%d",&data);
+             search(start,data);
+             break;
+             case 4: printf("Enter the elements to be inserted : ");
+             scanf("%d",&data);
+             start=addatbeg(start,data);
+             break;
+             case 5: printf("Enter the element to be inserted : ");
+             scanf("%d",&data);
+             start=addatend(start,data);
+             break;
+             case 6: printf("Enter the element to be inserted : ");
+             scanf("%d",&data);
+             printf("Enter the element after which to insert : ");
+             scanf("%d",&item);
+             start=addafter(start,data,item);
+             break;
+             case 7:printf("Enter the element to be inserted : ");
+             scanf("%d",&data);
+             printf("Enter the element before which to insert : ");
+             scanf("%d",&item);
+             start=addbefore(start,data,item);
+             break;
+             case 8: printf("Enter the element to be inserted : ");
+             scanf("%d",&data);
+             printf("Enter the position at which the element is to be inserted ");
+             scanf("%d",&pos);
+             start=addatpos(start,data,pos);
+             break;
+             case 9: printf("Enter the element to be deleted : ");
+             scanf("%d",&data);
+             start=del(start,data);
+             break;
+             case 10: start= reverse (start);
+             break;
+             case 11: exit(1);
+             default :
+             printf("Wrong choice\n"); 
+         } 
+         
+     }
+     
+ }
+ 
+void display(struct node*start)
+{
+    struct node *p;
+    if(start==NULL)
+    {
+        printf("List is empty\n");
+        return;
+    }
+    p=start;
+    printf("List is \n");
+    while(p!=NULL)
+    {
+        printf("%d " ,p->info);
+        p=p->link;}
+        printf("\n\n");
+    
+}
+void search(struct node *start, int item)
+{
+    struct node *p=start;
+    int pos=1;
+    while(p!=NULL)
+    {
+        if(p->info==item)
+        {
+            printf("Item %d found at position %d \n",item,pos);
+            return;
+        }
+        p=p->link;
+        pos++;
+    }
+    printf("Item %d not found in the list \n", item);
+    }
+    
+struct node *addatbeg( struct node *start,int data)
+{
+    struct node *temp;
+    temp=(struct node *)malloc(sizeof (struct node));
+    temp->info=data;
+    temp->link=start;
+    start=temp;
+    return start;
+}
+
+struct node*addatend(struct node *start,int data)
+{
+    struct node *p,*temp;
+    temp=(struct node *)malloc (sizeof(struct node));
+    temp->info=data;
+    p=start;
+    while(p->link!=NULL)
+    p=p->link;
+    p->link=temp;
+    temp->link=NULL;
+    return start;
+}
+
+struct node*addafter(struct node *start, int data,int item)
+{
+    struct node *temp,*p;
+    p=start;
+    temp=(struct node*)malloc (sizeof(struct node));
+    while(p!=NULL)
+    {
+        if(p->info==item)
+        {
+            temp->info=data;
+            temp->link=p->link;
+        p->link=temp;
+        return start;
+        }
+        p=p->link;
+    }
+    printf("%d not present in the list\n",item);
+    return start;
+}
+
+struct node* addbefore(struct node *start, int data, int item)
+{
+    struct node *p,*temp;
+    temp=(struct node *)malloc (sizeof (struct node));
+    while(p!=NULL)
+    {
+        if(p->link->info==item)
+        {
+            temp->info=data;
+            temp->link=p->link;
+            p->link=temp;
+        }
+        p=p->link;
+    }
+    printf("%d not present in the list \n ",item);
+    return start;
+}
+struct node *del(struct node *start, int data)
+{
+    struct node *temp,*p;
+    if(start==NULL)
+    {
+        printf("List is Empty\n");
+        return start;
+    }
+    if(start->info==data)
+    {
+        temp=start;
+        start=start->link;
+        free(temp);
+        return start;
+    }
+    p=start;
+    while(p->link!=NULL)
+    {
+        if(p->link->info==data)
+        {
+            temp=p->link;
+            p->link=temp->link;
+            free(temp);
+            return start;
+        }
+        p=p->link;
+    }
+    printf("Element %d not found \n",data);
+    return start;
+}
+struct node *create_list(struct node *start)
+{
+    int i,n,data;
+    printf("Enter the number of nodes: ");
+    scanf("%d",&n);
+    start=NULL;
+    if(n==0)
+    return start;
+    printf("Enter the element to be inserted : ");
+    scanf("%d",&data);
+    start= addatbeg(start,data);
+    
+    for(i=2;i<=n;i++)
+    {
+        printf("Enter the elements to be inserted : ");
+        scanf("%d",&data);
+        start=addatend(start,data);
+    }
+    return start;
+    }
+struct node *reverse(struct node *start)
+{
+    struct node *prev,*ptr,*next;
+    prev=NULL;
+    ptr=start;
+    while(ptr!=NULL)
+    {
+        next=ptr->link;
+        ptr->link=prev;
+        prev=ptr;
+        ptr=next;
+    }
+    start=prev;
+    return start;
+}
+struct node *addatpos(struct node *start, int data, int pos)
+{
+    struct node *temp,*p;
+    int i;
+    temp=(struct node *)malloc (sizeof(struct node));
+    temp->info=data;
+    if(pos==1)
+    {
+        temp->link=start;
+        start=temp;
+        return start;
+    }
+    p=start;
+    for(i=1;i<pos-1&&p!=NULL; i++)
+    p=p->link;
+    if(p==NULL)
+    printf("THere are less than %d elements\n",pos);
+    else
+    {
+        temp->link=p->link;
+        p->link=temp;
+    }
+    return start;
+}
